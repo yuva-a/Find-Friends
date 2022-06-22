@@ -25,6 +25,77 @@ int find_score(student x,student y)
 
 bool check_group2(vector<vector<int>> graph,int num_stud)
 {
+    int degree[num_stud];
+    bool paired[num_stud]={false};
+
+    for(int i=0;i<num_stud;i++)
+    {
+        degree[i]=graph[i].size();
+    }
+
+    set<pair<int,int>> s;
+
+    for(int i=0;i<num_stud;i++)
+    {
+        s.insert({degree[i],i});
+    }
+
+    while(!s.empty())
+    {
+        // if there is no vertex to map with then not possible
+        auto itr = s.begin();
+        if(itr->first<=0)
+            return false;
+        
+        // vertex with minimum degree
+        auto top = s.begin();
+        int vertex = top->second;
+        paired[top->second]=true;
+
+        int adjecent = -1;
+        
+        // finding minimum vertex adjecent to top with min degree
+        for(int i=0;i<graph[top->second].size();i++)
+        {
+            if(paired[graph[top->second][i]])continue;
+            if(adjecent==-1)
+            {
+                adjecent = graph[top->second][i];
+            }
+            else 
+            {
+                if(degree[graph[top->second][i]]<degree[adjecent])
+                    adjecent = graph[top->second][i];
+            }
+        }
+
+        // removing them from top and adjecent from set
+        paired[adjecent]=true;
+        s.erase(itr);
+        s.erase({degree[adjecent],adjecent});
+
+        // decreacing the degree
+        for(int i=0;i<graph[vertex].size();i++)
+        {
+            if(paired[graph[vertex][i]])continue;
+            int v=graph[vertex][i];
+            s.erase({degree[v],v});
+            degree[v]--;
+            s.insert({degree[v],v});
+        }
+
+        //decreasing the degree
+        for(int i=0;i<graph[adjecent].size();i++)
+        {
+            if(paired[graph[adjecent][i]])continue;
+            int v=graph[adjecent][i];
+            s.erase({degree[v],v});
+            degree[v]--;
+            s.insert({degree[v],v});
+        }
+    }
+    
+    // all are paired by now
     return true;
 }
 
@@ -34,7 +105,6 @@ vector <student> group_of_2(vector <student> group)
     // PROBLEM 3
 
     int num_stud = group.size();
-    vector<vector<int>> graph(num_stud);
 
     int score[num_stud][num_stud];
     for(int i=0;i<num_stud;i++)
@@ -59,7 +129,7 @@ vector <student> group_of_2(vector <student> group)
     sort(score_edge.begin(),score_edge.end());
     reverse(score_edge.begin(),score_edge.end());
 
-    vector< vector<int> > graph(num_stud);
+    vector<vector<int>> graph(num_stud);
 
     for(int i=0;i<num_stud/2;i++)
     {
@@ -83,6 +153,8 @@ vector <student> group_of_2(vector <student> group)
 
         if(check_group2(graph,num_stud))break;
     }
+
+
 }
 
 vector <student> group_of_3(vector <student> group)
