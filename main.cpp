@@ -28,6 +28,10 @@ bool compare_group_2(pair<int,pair<student,student>> p1,pair<int,pair<student,st
     return p1.first<p2.first;
 }
 
+bool comparator(pair<int,vector<student>> v1,pair<int,vector<student>> v2){
+    return v1.first<v2.first;
+}
+
 int mix_2_pairs(pair<student,student> p,pair<student,student> q)
 {
     int ans=0;
@@ -375,8 +379,130 @@ vector <student> group_of_4(vector <student> group)
 
 vector <student> group_of_5(vector <student> group)
 {
-    // ALGO FOR 5
-    // PROBLEM 3
+    int num_stud=group.size();
+    vector<student> remaining;
+    while(num_stud%5!=0)
+    {
+        num_stud--;
+        remaining.push_back(group[num_stud]);
+        group.pop_back();
+    }
+
+    vector<student> pairs1,pairs2,single;
+    //splitting into groups of 2/5,2/5 and 1/5 respectively;
+    for(int i=0;i<num_stud;i++){
+        if(i<2*num_stud/5){
+            pairs1.push_back(group[i]);continue;
+        }
+        if(i<4*num_stud/5){
+            pairs2.push_back(group[i]);continue;
+        }
+        single.push_back(group[i]);
+    }
+
+    pairs1= group_of_2(pairs1);
+    pairs2= group_of_2(pairs2);
+    vector <pair<int,vector<student>>> score_pairs2;
+
+    for(int i=0;i<pairs2.size();i+=2){
+        vector <student> v;
+        v.push_back(pairs2[i]);
+        v.push_back(pairs2[i+1]);
+        score_pairs2.push_back({find_score(pairs2[i],pairs2[i+1]),v});
+    }
+    //sorting according to scores in pairs2
+    sort(score_pairs2.begin(),score_pairs2.end(),comparator);
+    
+    bool paired[single.size()]={false};
+    vector <pair<int,vector<student>>> score_combined;
+    //assigning singles to sorted pairs2
+    for(int i=0;i<score_pairs2.size();i++){
+        student x=score_pairs2[i].second[0],y=score_pairs2[i].second[1],z;
+        vector <student> v;
+        int max=-1,index=-1;
+        for(int j=0;j<single.size();j++){
+            if(paired[j])continue;
+                if(max==-1)
+                {   
+                    index=j;
+                    z=single[j];
+                    max = find_score(single[j],x)+find_score(single[j],y);
+                }
+                else
+                {
+                    if(max<find_score(single[j],x)+find_score(single[j],y)){
+                        index=j;
+                        z=single[j];
+                        max = find_score(single[j],x)+find_score(single[j],y);
+                    }
+                }
+        }
+        //pushing x,y,z in order of their net_score
+        int q1=find_score(x,y)+find_score(x,z);
+        int q2=find_score(y,x)+find_score(y,z);
+        int q3=find_score(z,y)+find_score(z,x);
+        if(q1<=q2&&q1<=q3){
+            v.push_back(x);
+            v.push_back(y);
+            v.push_back(z);
+            score_combined.push_back({q1,v});
+        }
+        if(q2<=q1&&q2<=q3){
+            v.push_back(y);
+            v.push_back(x);
+            v.push_back(z);
+            score_combined.push_back({q2,v});
+        }
+        if(q3<=q1&&q3<=q2){
+            v.push_back(z);
+            v.push_back(y);
+            v.push_back(x);
+            score_combined.push_back({q3,v});
+        }
+        paired[index]=true;
+    }
+    //score_combined contains groups of 3
+    //And their first member is the person with least net_score
+    sort(score_combined.begin(),score_combined.end(),comparator);
+
+    vector <student> final_group;//final_group=score_combined+pairs1;
+    paired[pairs1.size()]={false};
+    //assigning pairs1 to least net_score memmbers from score_combined
+    for(int i=0;i<score_combined.size();i++){
+        student x,y,z=score_combined[i].second[0];
+        int max=-1,index=-1;
+        for(int j=0;j<pairs1.size();j+=2){
+            if(paired[j])continue;
+                if(max==-1)
+                {   
+                    index=j;
+                    x=pairs1[j];
+                    y=pairs1[j+1];
+                    max = find_score(z,pairs1[j])+find_score(z,pairs1[j+1]);
+                }
+                else
+                {
+                    if(max<find_score(z,pairs1[j])+find_score(z,pairs1[j+1])){
+                        index=j;
+                        x=pairs1[j];
+                        y=pairs1[j+1];
+                        max = find_score(z,pairs1[j])+find_score(z,pairs1[j+1]);
+                    }
+                }
+        }
+        final_group.push_back(score_combined[i].second[0]);
+        final_group.push_back(score_combined[i].second[1]);
+        final_group.push_back(score_combined[i].second[2]);
+        final_group.push_back(x);
+        final_group.push_back(y);
+        paired[index]=true;
+    }
+    //pushing remaining ones
+    for(int i=0;i<remaining.size();i++)
+    {
+        final_group.push_back(remaining[i]);
+    }
+    return final_group;
 }
 
 
