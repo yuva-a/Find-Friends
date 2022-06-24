@@ -271,15 +271,15 @@ vector <student> group_of_3(vector <student> group)
                     }
                 }
             }
-
-            paired[x]=true;
-            paired[y]=true;
-            index=score_index[i].second;
-
-            final_group.push_back(group[index]);
-            final_group.push_back(group[x]);
-            final_group.push_back(group[y]);
         }
+
+        paired[x]=true;
+        paired[y]=true;
+        index=score_index[i].second;
+
+        final_group.push_back(group[index]);
+        final_group.push_back(group[x]);
+        final_group.push_back(group[y]);
     }
 
     for(int i=0;i<remaining.size();i++)
