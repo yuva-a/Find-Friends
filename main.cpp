@@ -23,6 +23,17 @@ int find_score(student x,student y)
     return 0;
 }
 
+int mix_2_pairs(pair<student,student> p,pair<student,student> q)
+{
+    int ans=0;
+    ans+=find_score(p.first,q.first);
+    ans+=find_score(p.first,q.second);
+    ans+=find_score(p.second,q.first);
+    ans+=find_score(p.second,q.second);
+
+    return ans;
+}
+
 vector<int> check_group2(vector<vector<int>> graph,int num_stud)
 {
     int degree[num_stud];
@@ -292,8 +303,69 @@ vector <student> group_of_3(vector <student> group)
 
 vector <student> group_of_4(vector <student> group)
 {
-    // ALGO FOR 4
-    // PROBLEM 3
+    int num_stud=group.size();
+    vector<student> remaining;
+    while(num_stud%4!=0)
+    {
+        num_stud--;
+        remaining.push_back(group[num_stud]);
+        group.pop_back();
+    }
+
+    //grouped a pairs
+    group = group_of_2(group);
+
+    //paired as pairs<>
+    vector < pair<int,pair<student,student>> > group2;
+    for(int i=0;i<num_stud;i+=2)
+    {
+        int score = find_score(group[i],group[i+1]);
+        group2.push_back({score,{group[i],group[i+1]}});
+    }
+
+    // sorted according to there similarities 
+    sort(group2.begin(),group2.end());
+
+    // least similar is grouped with there best pair
+    vector<student> final_group;
+    bool paired[num_stud/2]={false};
+
+    for(int i=0;i<num_stud/2;i++)
+    {
+        if(paired[i])continue;
+        paired[i]=true;
+
+        int index=-1;
+        int max_match;
+
+        for(int j=i+1;j<num_stud/2;j++)
+        {
+            if(paired[j])continue;
+            if(index==-1)
+            {
+                index=j;
+                max_match=mix_2_pairs(group2[i].second,group2[j].second);
+            }
+            else if(max_match<mix_2_pairs(group2[i].second,group2[j].second)) 
+            {
+                max_match = mix_2_pairs(group2[i].second,group2[j].second);
+                index=j;
+            }
+        }
+
+        paired[index]=true;
+        final_group.push_back(group2[i].second.first);
+        final_group.push_back(group2[i].second.second);
+        final_group.push_back(group2[index].second.first);
+        final_group.push_back(group2[index].second.second);
+    }
+
+    for(int i=0;i<remaining.size();i++)
+    {
+        final_group.push_back(remaining[i]);
+    }
+
+    return final_group;
 }
 
 vector <student> group_of_5(vector <student> group)
