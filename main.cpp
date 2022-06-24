@@ -23,6 +23,11 @@ int find_score(student x,student y)
     return 0;
 }
 
+bool compare_group_2(pair<int,pair<student,student>> p1,pair<int,pair<student,student>> p2)
+{
+    return p1.first<p2.first;
+}
+
 int mix_2_pairs(pair<student,student> p,pair<student,student> q)
 {
     int ans=0;
@@ -324,7 +329,7 @@ vector <student> group_of_4(vector <student> group)
     }
 
     // sorted according to there similarities 
-    sort(group2.begin(),group2.end());
+    sort(group2.begin(),group2.end(),compare_group_2);
 
     // least similar is grouped with there best pair
     vector<student> final_group;
