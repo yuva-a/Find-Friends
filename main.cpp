@@ -116,6 +116,7 @@ vector <student> group_of_2(vector <student> group)
         //to take care of odd no. of students case
         num_stud--;
     }
+
     int score[num_stud][num_stud];
     for(int i=0;i<num_stud;i++)
     {
@@ -179,10 +180,114 @@ vector <student> group_of_2(vector <student> group)
     return group_2;
 
 }
+
+double variance(int x,int y,int z)
+{
+    // variance with respect to avg
+    double avg=double((x+y+z)/3);
+    double ans = (x-avg)*(x-avg) + (y-avg)*(y-avg) + (z-avg)*(z-avg);
+    ans = ans/3;
+    ans = sqrt(ans);
+    ans = ans / (avg+0.1);
+
+    return ans;
+}
+
 vector <student> group_of_3(vector <student> group)
 {
-    // ALGO FOR 3
-    // PROBLEM 3
+    int num_stud=group.size();
+    vector<student> remaining;
+    while(num_stud%3!=0)
+    {
+        num_stud--;
+        remaining.push_back(group[num_stud]);
+        group.pop_back();
+    }
+
+    int score[num_stud][num_stud];
+    for(int i=0;i<num_stud;i++)
+    {
+        for(int j=0;j<num_stud;j++)
+        {
+            score[i][j]=find_score(group[i],group[j]);
+        }
+    }
+
+    vector <pair<int,int>> score_index;
+    // first = net_score
+    // second = its index
+
+    for(int i=0;i<num_stud;i++)
+    {
+        int net_score=0;
+        for(int j=0;j<num_stud;j++)
+        {
+            net_score+=score[i][j];
+        }
+
+        score_index.push_back({net_score,i});
+    }
+
+    sort(score_index.begin(),score_index.end());
+
+    bool paired[num_stud]={false}; // is already paired or not
+    
+    vector<student> final_group;
+
+    for(int i=0;i<num_stud;i++)
+    {
+        int index=score_index[i].second;
+        if(paired[index])continue;
+        paired[index]=true;
+
+        int x=-1,y=-1;
+        double min_variance;
+
+        for(int j=i+1;j<num_stud;j++)
+        {
+            index=score_index[j].second;
+            if(paired[index])continue;
+            for(int k=j+1;k<num_stud;k++)
+            {
+                index=score_index[k].second;
+                if(paired[index])continue;
+
+                if(x==-1)
+                {
+                    x=score_index[j].second;
+                    y=score_index[k].second;
+                    index=score_index[i].second;
+                    min_variance = variance(score[index][x],score[index][y],score[x][y]);
+                }
+                else
+                {
+                    index=score_index[i].second;
+                    if(min_variance > variance(score[index][score_index[j].second],score[index][score_index[k].second],score[score_index[j].second][score_index[k].second]))
+                    {
+                        x=score_index[j].second;
+                        y=score_index[k].second;
+                        index=score_index[i].second;
+                        min_variance = variance(score[index][x],score[index][y],score[x][y]);
+                    }
+                }
+            }
+
+            paired[x]=true;
+            paired[y]=true;
+            index=score_index[i].second;
+
+            final_group.push_back(group[index]);
+            final_group.push_back(group[x]);
+            final_group.push_back(group[y]);
+        }
+    }
+
+    for(int i=0;i<remaining.size();i++)
+    {
+        final_group.push_back(remaining[i]);
+    }
+
+    return final_group;
 }
 
 vector <student> group_of_4(vector <student> group)
