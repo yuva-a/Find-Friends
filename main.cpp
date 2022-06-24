@@ -23,11 +23,11 @@ int find_score(student x,student y)
     return 0;
 }
 
-bool check_group2(vector<vector<int>> graph,int num_stud)
+vector<int> check_group2(vector<vector<int>> graph,int num_stud)
 {
     int degree[num_stud];
     bool paired[num_stud]={false};
-
+    vector<int> pairs;
     for(int i=0;i<num_stud;i++)
     {
         degree[i]=graph[i].size();
@@ -44,8 +44,11 @@ bool check_group2(vector<vector<int>> graph,int num_stud)
     {
         // if there is no vertex to map with then not possible
         auto itr = s.begin();
-        if(itr->first<=0)
-            return false;
+        if(itr->first<=0){
+            vector<int> v;
+            //returning empty vector as we failed to pair students with this graph 
+            return v;
+        }
         
         // vertex with minimum degree
         auto top = s.begin();
@@ -71,6 +74,9 @@ bool check_group2(vector<vector<int>> graph,int num_stud)
 
         // removing them from top and adjecent from set
         paired[adjecent]=true;
+        //pushing paired students into pairs vector
+        pairs.push_back(top->second);
+        pairs.push_back(adjecent);
         s.erase(itr);
         s.erase({degree[adjecent],adjecent});
 
@@ -96,7 +102,7 @@ bool check_group2(vector<vector<int>> graph,int num_stud)
     }
     
     // all are paired by now
-    return true;
+    return pairs;
 }
 
 vector <student> group_of_2(vector <student> group)
@@ -105,7 +111,11 @@ vector <student> group_of_2(vector <student> group)
     // PROBLEM 3
 
     int num_stud = group.size();
-
+    student odd;
+    if(group.size()%2==1){
+        //to take care of odd no. of students case
+        num_stud--;
+    }
     int score[num_stud][num_stud];
     for(int i=0;i<num_stud;i++)
     {
@@ -131,7 +141,7 @@ vector <student> group_of_2(vector <student> group)
 
     vector<vector<int>> graph(num_stud);
 
-    for(int i=0;i<num_stud/2;i++)
+    for(int i=0;i<num_stud/2-1;i++)
     {
         int x=score_edge[i].second.first;
         int y=score_edge[i].second.second;
@@ -140,7 +150,8 @@ vector <student> group_of_2(vector <student> group)
         graph[y].push_back(x);
     }
 
-    int min_required_edges=num_stud/2;
+    vector<int> pairs;
+    int min_required_edges=num_stud/2-1;
 
     for(;min_required_edges<score_edge.size();min_required_edges++)
     {
@@ -150,13 +161,24 @@ vector <student> group_of_2(vector <student> group)
 
         graph[x].push_back(y);
         graph[y].push_back(x);
+        
+        pairs=check_group2(graph,num_stud);
+        if(pairs.size()==num_stud)break;
+    }
+    if(group.size()%2==1){
+        //if group size waas odd ,add last student .
+       pairs.push_back(group.size()-1);
+    }
+    
+    vector <student> group_2;
 
-        if(check_group2(graph,num_stud))break;
+    for(int x:pairs){
+        group_2.push_back(group[x]);
     }
 
+    return group_2;
 
 }
-
 vector <student> group_of_3(vector <student> group)
 {
     // ALGO FOR 3
