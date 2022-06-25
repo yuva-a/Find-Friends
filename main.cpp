@@ -41,7 +41,7 @@ int find_score(student x,student y)
         score+=10;
         if(x.MCQ[1]=="K")score-=4;
     }
-    if(x.MCQ[2]==y.MCQ[1])
+    if(x.MCQ[2]==y.MCQ[2])
     {
         score+=8;
         if(x.MCQ[2]=="G")score+=2;
