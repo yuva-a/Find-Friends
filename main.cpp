@@ -14,13 +14,48 @@ public:
 
     // Factors to be considered HERE
     // PROBLEM 4
+
+    int introvertism_num;
+    int emotional_num;
+    int desi_num;
+
+    string MCQ[7];
 };
+
+int find_on_scale(int x,int y)
+{
+    double ans=abs(x-y);
+    ans=sqrt(ans);
+    ans++;
+    ans=15/ans;
+    return ans;
+}
 
 int find_score(student x,student y)
 {
     // SCORING SYSTEM AND WEIGHTAGE
+    int score=0;
+    if(x.MCQ[0]==y.MCQ[0])score+=7;
+    if(x.MCQ[1]==y.MCQ[1])
+    {
+        score+=10;
+        if(x.MCQ[1]=="K")score-=4;
+    }
+    if(x.MCQ[2]==y.MCQ[1])
+    {
+        score+=8;
+        if(x.MCQ[2]=="G")score+=2;
+    }
+    if(x.MCQ[3]==y.MCQ[3])score+=7;
+    if(x.MCQ[4]==y.MCQ[4])score+=7;
+    if(x.MCQ[5]==y.MCQ[5])score+=15;
+    if(x.MCQ[6]==y.MCQ[6])score+=9;
 
-    return 0;
+    score+=find_on_scale(x.introvertism_num,y.introvertism_num);
+    score+=find_on_scale(x.emotional_num,y.emotional_num);
+    score+=find_on_scale(x.desi_num,y.desi_num);
+    
+    return score;
 }
 
 bool compare_group_2(pair<int,pair<student,student>> p1,pair<int,pair<student,student>> p2)
