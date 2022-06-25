@@ -7,6 +7,7 @@ class student
 public:
     
     string name;
+    string mailid;
     string number;
     string rollnumber;
 
@@ -39,22 +40,26 @@ int find_score(student x,student y)
     if(x.MCQ[1]==y.MCQ[1])
     {
         score+=10;
-        if(x.MCQ[1]=="K")score-=4;
+        if(x.MCQ[1]=="Some other sport not mentioned above")score-=4;
     }
     if(x.MCQ[2]==y.MCQ[2])
     {
         score+=8;
-        if(x.MCQ[2]=="G")score+=2;
+        if(x.MCQ[2]=="Who plays those PC or Mobile games 🤦🏻‍♂️")score+=2;
     }
     if(x.MCQ[3]==y.MCQ[3])score+=7;
     if(x.MCQ[4]==y.MCQ[4])score+=7;
     if(x.MCQ[5]==y.MCQ[5])score+=15;
-    if(x.MCQ[6]==y.MCQ[6])score+=9;
+    if(x.MCQ[6]==y.MCQ[6])
+    {
+        score+=9;
+        if(x.MCQ[6]=="NONE OF THE ABOVE")score-=5;
+    }
 
     score+=find_on_scale(x.introvertism_num,y.introvertism_num);
     score+=find_on_scale(x.emotional_num,y.emotional_num);
     score+=find_on_scale(x.desi_num,y.desi_num);
-    
+
     return score;
 }
 
@@ -543,11 +548,68 @@ vector <student> group_of_5(vector <student> group)
 
 int32_t main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    ifstream file;
+    file.open("input.csv");
+    
+    int num_students=-1;
+    vector<string> input;
 
-    int num_students=1000;
+    while(file.good())
+    {
+        if(num_students==-1)
+        {
+            string s;
+            for(int i=0;i<16;i++)
+            {
+                getline(file,s,',');
+            }
+        }
+        else
+        {
+            string s;
+            for(int i=0;i<16;i++)
+            {
+                getline(file,s,',');
+                input.push_back(s);
+            }
+        }
+        num_students++;
+    }
+
     student stud[num_students];
+    int x=0;
+
+    for(int i=0;i<num_students;i++)
+    {
+        x++;
+        stud[i].mailid = input[x]; x++;
+        stud[i].name = input[x]; x++;
+        stud[i].number = input[x]; x++;
+        stud[i].rollnumber = input[x]; x++;
+        
+        string s=input[x]; x++; //size of group 
+        stud[i].size_of_group = s[0]-'0';
+        
+        s=input[x]; x++; //intorvertism rating
+        
+        if(s.size()==2) stud[i].introvertism_num = 10;
+        else stud[i].introvertism_num = s[0] -'0';
+        
+        s=input[x]; x++; //emotional rating
+        
+        if(s.size()==2) stud[i].emotional_num = 10;
+        else stud[i].emotional_num = s[0] -'0';
+
+        s=input[x]; x++; //desi rating
+        
+        if(s.size()==2) stud[i].desi_num = 10;
+        else stud[i].desi_num = s[0] -'0';
+
+        for(int j=0;j<7;j++)
+        {
+            stud[i].MCQ[j] = input[x]; x++;
+        }
+    }
 
     // Take input from CSS FILE 
     // PROBLEM 2
