@@ -644,4 +644,70 @@ int32_t main()
     group3 = group_of_3(group3);
     group4 = group_of_4(group4);
     group5 = group_of_5(group5);
+vector <student> left_out;
+    ofstream out;
+    out.open("output.csv");
+    out<<"\nSize of 2:\n";
+    int i;
+    for(i=0;i<group2.size();i+=2){
+        if(i+2>group2.size()){
+            break;
+        }
+        out<<group2[i].name<<","<<group2[i].rollnumber<<","<<group2[i].number<<"\n";
+        out<<group2[i+1].name<<","<<group2[i+1].rollnumber<<","<<group2[i+1].number<<"\n\n";
+    }
+    while(i!=group2.size()){
+        left_out.push_back(group2[i]);
+        i++;
+    }
+
+        out<<"\nSize of 3:\n";
+
+    for(i=0;i<group3.size();i+=3){
+        if(i+3>group3.size()){
+            break;
+        }
+        out<<group3[i].name<<","<<group3[i].rollnumber<<","<<group3[i].number<<"\n";
+        out<<group3[i+1].name<<","<<group3[i+1].rollnumber<<","<<group3[i+1].number<<"\n";
+        out<<group3[i+2].name<<","<<group3[i+2].rollnumber<<","<<group3[i+2].number<<"\n\n";
+    }
+    while(i!=group3.size()){
+        left_out.push_back(group3[i]);
+        i++;
+    }
+
+        out<<"\nSize of 4:\n";
+    for( i=0;i<group4.size();i+=4){
+        if(i+4>group4.size()){
+            break;
+        }
+        out<<group4[i].name<<","<<group4[i].rollnumber<<","<<group4[i].number<<"\n";
+        out<<group4[i+1].name<<","<<group4[i+1].rollnumber<<","<<group4[i+1].number<<"\n";
+        out<<group4[i+2].name<<","<<group4[i+2].rollnumber<<","<<group4[i+2].number<<"\n";
+        out<<group4[i+3].name<<","<<group4[i+3].rollnumber<<","<<group4[i+3].number<<"\n\n";
+    }
+    while(i!=group4.size()){
+        left_out.push_back(group4[i]);
+        i++;
+    }
+        out<<"\nSize of 5:\n";
+    for(i=0;i<group5.size();i+=5){
+        if(i+5>group5.size()){
+            break;
+        }
+        out<<group5[i].name<<","<<group5[i].rollnumber<<","<<group5[i].number<<"\n";
+        out<<group5[i+1].name<<","<<group5[i+1].rollnumber<<","<<group5[i+1].number<<"\n";
+        out<<group5[i+2].name<<","<<group5[i+2].rollnumber<<","<<group5[i+2].number<<"\n";
+        out<<group5[i+3].name<<","<<group5[i+3].rollnumber<<","<<group5[i+3].number<<"\n";
+        out<<group5[i+4].name<<","<<group5[i+4].rollnumber<<","<<group5[i+4].number<<"\n\n";
+    }
+    while(i!=group5.size()){
+        left_out.push_back(group5[i]);
+        i++;
+    }
+    out<<"\nLeftout people:\n";
+    for(auto x:left_out){
+        out<<x.name<<","<<x.rollnumber<<","<<x.number<<"\n\n";
+    }
+
 }
