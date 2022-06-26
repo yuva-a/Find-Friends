@@ -1,6 +1,6 @@
 // YUVA & MOKSHITH
-    #include<bits/stdc++.h>
-    using namespace std;
+#include<bits/stdc++.h>
+using namespace std;
 
 class student
 {
@@ -564,7 +564,7 @@ int32_t main()
             for(int i=0;i<18;i++)
             {
                 getline(file,s,',');
-                //cout<<s;
+
             }
             getline(file,s,'\n');
         }
@@ -575,7 +575,7 @@ int32_t main()
             {
                 getline(file,s,',');
                 input.push_back(s);
-                cout<<s<<endl;
+                
             }
             getline(file,s,'\n');
             input.push_back(s);
@@ -644,7 +644,7 @@ int32_t main()
     group3 = group_of_3(group3);
     group4 = group_of_4(group4);
     group5 = group_of_5(group5);
-vector <student> left_out;
+    vector <student> left_out;
     ofstream out;
     out.open("output.csv");
     out<<"\nSize of 2:\n";
