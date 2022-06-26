@@ -5,7 +5,7 @@
 class student
 {
 public:
-    
+
     string name;
     string mailid;
     string number;
@@ -106,17 +106,17 @@ vector<int> check_group2(vector<vector<int>> graph,int num_stud)
         auto itr = s.begin();
         if(itr->first<=0){
             vector<int> v;
-            //returning empty vector as we failed to pair students with this graph 
+            //returning empty vector as we failed to pair students with this graph
             return v;
         }
-        
+
         // vertex with minimum degree
         auto top = s.begin();
         int vertex = top->second;
         paired[top->second]=true;
 
         int adjecent = -1;
-        
+
         // finding minimum vertex adjecent to top with min degree
         for(int i=0;i<graph[top->second].size();i++)
         {
@@ -125,7 +125,7 @@ vector<int> check_group2(vector<vector<int>> graph,int num_stud)
             {
                 adjecent = graph[top->second][i];
             }
-            else 
+            else
             {
                 if(degree[graph[top->second][i]]<degree[adjecent])
                     adjecent = graph[top->second][i];
@@ -160,7 +160,7 @@ vector<int> check_group2(vector<vector<int>> graph,int num_stud)
             s.insert({degree[v],v});
         }
     }
-    
+
     // all are paired by now
     return pairs;
 }
@@ -185,7 +185,7 @@ vector <student> group_of_2(vector <student> group)
             score[i][j]=find_score(group[i],group[j]);
         }
     }
-    
+
     // score , (x,y) -> x,y are vectices
     vector < pair< int,pair<int,int> > > score_edge;
 
@@ -196,7 +196,7 @@ vector <student> group_of_2(vector <student> group)
             score_edge.push_back({score[i][j],{i,j}});
         }
     }
-    
+
     sort(score_edge.begin(),score_edge.end());
     reverse(score_edge.begin(),score_edge.end());
 
@@ -222,7 +222,7 @@ vector <student> group_of_2(vector <student> group)
 
         graph[x].push_back(y);
         graph[y].push_back(x);
-        
+
         pairs=check_group2(graph,num_stud);
         if(pairs.size()==num_stud)break;
     }
@@ -230,7 +230,7 @@ vector <student> group_of_2(vector <student> group)
         //if group size waas odd ,add last student .
        pairs.push_back(group.size()-1);
     }
-    
+
     vector <student> group_2;
 
     for(int x:pairs){
@@ -291,7 +291,7 @@ vector <student> group_of_3(vector <student> group)
     sort(score_index.begin(),score_index.end());
 
     bool paired[num_stud]={false}; // is already paired or not
-    
+
     vector<student> final_group;
 
     for(int i=0;i<num_stud;i++)
@@ -372,7 +372,7 @@ vector <student> group_of_4(vector <student> group)
         group2.push_back({score,{group[i],group[i+1]}});
     }
 
-    // sorted according to there similarities 
+    // sorted according to there similarities
     sort(group2.begin(),group2.end(),compare_group_2);
 
     // least similar is grouped with there best pair
@@ -395,7 +395,7 @@ vector <student> group_of_4(vector <student> group)
                 index=j;
                 max_match=mix_2_pairs(group2[i].second,group2[j].second);
             }
-            else if(max_match<mix_2_pairs(group2[i].second,group2[j].second)) 
+            else if(max_match<mix_2_pairs(group2[i].second,group2[j].second))
             {
                 max_match = mix_2_pairs(group2[i].second,group2[j].second);
                 index=j;
@@ -452,7 +452,7 @@ vector <student> group_of_5(vector <student> group)
     }
     //sorting according to scores in pairs2
     sort(score_pairs2.begin(),score_pairs2.end(),comparator);
-    
+
     bool paired[single.size()]={false};
     vector <pair<int,vector<student>>> score_combined;
     //assigning singles to sorted pairs2
@@ -463,7 +463,7 @@ vector <student> group_of_5(vector <student> group)
         for(int j=0;j<single.size();j++){
             if(paired[j])continue;
                 if(max==-1)
-                {   
+                {
                     index=j;
                     z=single[j];
                     max = find_score(single[j],x)+find_score(single[j],y);
@@ -514,7 +514,7 @@ vector <student> group_of_5(vector <student> group)
         for(int j=0;j<pairs1.size();j+=2){
             if(paired[j])continue;
                 if(max==-1)
-                {   
+                {
                     index=j;
                     x=pairs1[j];
                     y=pairs1[j+1];
@@ -550,7 +550,7 @@ int32_t main()
 {
     ifstream file;
     file.open("input.csv");
-    
+
     int num_students=-1;
     vector<string> input;
 
@@ -559,22 +559,29 @@ int32_t main()
         if(num_students==-1)
         {
             string s;
-            for(int i=0;i<16;i++)
+            for(int i=0;i<18;i++)
             {
                 getline(file,s,',');
+                //cout<<s;
             }
+            getline(file,s,'\n');
         }
         else
         {
             string s;
-            for(int i=0;i<16;i++)
+            for(int i=0;i<15;i++)
             {
                 getline(file,s,',');
                 input.push_back(s);
+                cout<<s<<endl;
             }
+            getline(file,s,'\n');
+            input.push_back(s);
         }
         num_students++;
     }
+
+    //for(int i=0;i<input.size();i++)cout<<input[i]<<endl;
 
     student stud[num_students];
     int x=0;
@@ -586,22 +593,22 @@ int32_t main()
         stud[i].name = input[x]; x++;
         stud[i].number = input[x]; x++;
         stud[i].rollnumber = input[x]; x++;
-        
-        string s=input[x]; x++; //size of group 
+
+        string s=input[x]; x++; //size of group
         stud[i].size_of_group = s[0]-'0';
-        
+
         s=input[x]; x++; //intorvertism rating
-        
+
         if(s.size()==2) stud[i].introvertism_num = 10;
         else stud[i].introvertism_num = s[0] -'0';
-        
+
         s=input[x]; x++; //emotional rating
-        
+
         if(s.size()==2) stud[i].emotional_num = 10;
         else stud[i].emotional_num = s[0] -'0';
 
         s=input[x]; x++; //desi rating
-        
+
         if(s.size()==2) stud[i].desi_num = 10;
         else stud[i].desi_num = s[0] -'0';
 
@@ -611,7 +618,7 @@ int32_t main()
         }
     }
 
-    // Take input from CSS FILE 
+    // Take input from CSS FILE
     // PROBLEM 2
 
     vector <student> group2;
