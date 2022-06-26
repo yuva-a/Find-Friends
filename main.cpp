@@ -442,6 +442,7 @@ vector <student> group_of_5(vector <student> group)
 
     pairs1= group_of_2(pairs1);
     pairs2= group_of_2(pairs2);
+
     vector <pair<int,vector<student>>> score_pairs2;
 
     for(int i=0;i<pairs2.size();i+=2){
@@ -481,38 +482,39 @@ vector <student> group_of_5(vector <student> group)
         int q1=find_score(x,y)+find_score(x,z);
         int q2=find_score(y,x)+find_score(y,z);
         int q3=find_score(z,y)+find_score(z,x);
+        paired[index]=true;
         if(q1<=q2&&q1<=q3){
             v.push_back(x);
             v.push_back(y);
             v.push_back(z);
-            score_combined.push_back({q1,v});
+            score_combined.push_back({q1,v});continue;
         }
         if(q2<=q1&&q2<=q3){
             v.push_back(y);
             v.push_back(x);
             v.push_back(z);
-            score_combined.push_back({q2,v});
+            score_combined.push_back({q2,v});continue;
         }
         if(q3<=q1&&q3<=q2){
             v.push_back(z);
             v.push_back(y);
             v.push_back(x);
-            score_combined.push_back({q3,v});
+            score_combined.push_back({q3,v});continue;
         }
-        paired[index]=true;
+
     }
     //score_combined contains groups of 3
     //And their first member is the person with least net_score
     sort(score_combined.begin(),score_combined.end(),comparator);
 
     vector <student> final_group;//final_group=score_combined+pairs1;
-    paired[pairs1.size()]={false};
+    bool paired2[pairs1.size()]={false};
     //assigning pairs1 to least net_score memmbers from score_combined
     for(int i=0;i<score_combined.size();i++){
         student x,y,z=score_combined[i].second[0];
         int max=-1,index=-1;
         for(int j=0;j<pairs1.size();j+=2){
-            if(paired[j])continue;
+            if(paired2[j])continue;
                 if(max==-1)
                 {
                     index=j;
@@ -530,12 +532,13 @@ vector <student> group_of_5(vector <student> group)
                     }
                 }
         }
+        final_group.push_back(x);
+        final_group.push_back(y);
         final_group.push_back(score_combined[i].second[0]);
         final_group.push_back(score_combined[i].second[1]);
         final_group.push_back(score_combined[i].second[2]);
-        final_group.push_back(x);
-        final_group.push_back(y);
-        paired[index]=true;
+
+        paired2[index]=true;
     }
     //pushing remaining ones
     for(int i=0;i<remaining.size();i++)
@@ -544,7 +547,6 @@ vector <student> group_of_5(vector <student> group)
     }
     return final_group;
 }
-
 
 int32_t main()
 {
