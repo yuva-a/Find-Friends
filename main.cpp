@@ -14,7 +14,6 @@ public:
     int size_of_group; // 2 - 5
 
     // Factors to be considered HERE
-    // PROBLEM 4
 
     int introvertism_num;
     int emotional_num;
@@ -168,7 +167,6 @@ vector<int> check_group2(vector<vector<int>> graph,int num_stud)
 vector <student> group_of_2(vector <student> group)
 {
     // ALGO FOR 2
-    // PROBLEM 3
 
     int num_stud = group.size();
     student odd;
@@ -583,8 +581,6 @@ int32_t main()
         num_students++;
     }
 
-    //for(int i=0;i<input.size();i++)cout<<input[i]<<endl;
-
     student stud[num_students];
     int x=0;
 
@@ -621,7 +617,6 @@ int32_t main()
     }
 
     // Take input from CSS FILE
-    // PROBLEM 2
 
     vector <student> group2;
     vector <student> group3;
